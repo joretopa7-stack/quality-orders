@@ -1,0 +1,65 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /home/claude/quality-orders/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/claude/quality-orders
+configfile: pyproject.toml
+testpaths: tests
+collecting ... collected 43 items
+
+tests/test_order_service.py::test_create_valid_order_returns_normalized_data PASSED [  2%]
+tests/test_order_service.py::test_create_valid_order_calculates_totals_correctly PASSED [  4%]
+tests/test_order_service.py::test_create_valid_order_starts_in_pending_status PASSED [  6%]
+tests/test_order_service.py::test_create_valid_order_saves_exactly_one_order PASSED [  9%]
+tests/test_order_service.py::test_create_rejects_duplicate_order_code PASSED [ 11%]
+tests/test_order_service.py::test_duplicate_order_does_not_save_second_record PASSED [ 13%]
+tests/test_order_service.py::test_invalid_order_data_is_not_stored PASSED [ 16%]
+tests/test_order_service.py::test_can_create_two_distinct_orders_in_same_repository PASSED [ 18%]
+tests/test_order_service.py::test_new_repository_starts_empty_independent_of_other_tests PASSED [ 20%]
+tests/test_pricing.py::test_calculate_subtotal[10000-1-10000] PASSED     [ 23%]
+tests/test_pricing.py::test_calculate_subtotal[5000-4-20000] PASSED      [ 25%]
+tests/test_pricing.py::test_calculate_subtotal[25000-3-75000] PASSED     [ 27%]
+tests/test_pricing.py::test_calculate_discount_below_100000_is_zero PASSED [ 30%]
+tests/test_pricing.py::test_calculate_discount_at_exact_100000_boundary PASSED [ 32%]
+tests/test_pricing.py::test_calculate_discount_just_below_500000_keeps_10_percent PASSED [ 34%]
+tests/test_pricing.py::test_calculate_discount_at_exact_500000_boundary PASSED [ 37%]
+tests/test_pricing.py::test_calculate_discount_above_500000 PASSED       [ 39%]
+tests/test_pricing.py::test_calculate_shipping_cost_by_zone[local-8000] PASSED [ 41%]
+tests/test_pricing.py::test_calculate_shipping_cost_by_zone[regional-15000] PASSED [ 44%]
+tests/test_pricing.py::test_calculate_shipping_cost_by_zone[nacional-25000] PASSED [ 46%]
+tests/test_pricing.py::test_calculate_shipping_cost_just_below_free_threshold PASSED [ 48%]
+tests/test_pricing.py::test_calculate_shipping_cost_at_free_threshold FAILED [ 51%]
+tests/test_pricing.py::test_calculate_order_total_local_no_discount PASSED [ 53%]
+tests/test_pricing.py::test_calculate_order_total_with_10_percent_discount PASSED [ 55%]
+tests/test_pricing.py::test_calculate_order_total_with_free_shipping PASSED [ 58%]
+tests/test_validators.py::test_validate_customer_name_normalizes_whitespace PASSED [ 60%]
+tests/test_validators.py::test_validate_customer_name_accepts_exact_minimum_length PASSED [ 62%]
+tests/test_validators.py::test_validate_customer_name_raises_when_too_short PASSED [ 65%]
+tests/test_validators.py::test_validate_product_code_normalizes_to_uppercase PASSED [ 67%]
+tests/test_validators.py::test_validate_product_code_accepts_exact_minimum_length PASSED [ 69%]
+tests/test_validators.py::test_validate_product_code_raises_when_too_short PASSED [ 72%]
+tests/test_validators.py::test_validate_unit_price_accepts_positive_value PASSED [ 74%]
+tests/test_validators.py::test_validate_unit_price_raises_when_zero PASSED [ 76%]
+tests/test_validators.py::test_validate_unit_price_raises_when_negative PASSED [ 79%]
+tests/test_validators.py::test_validate_quantity_accepts_boundary_values[1] PASSED [ 81%]
+tests/test_validators.py::test_validate_quantity_accepts_boundary_values[20] PASSED [ 83%]
+tests/test_validators.py::test_validate_quantity_raises_outside_boundaries[0] PASSED [ 86%]
+tests/test_validators.py::test_validate_quantity_raises_outside_boundaries[21] PASSED [ 88%]
+tests/test_validators.py::test_validate_shipping_zone_normalizes[local-local] PASSED [ 90%]
+tests/test_validators.py::test_validate_shipping_zone_normalizes[REGIONAL-regional] PASSED [ 93%]
+tests/test_validators.py::test_validate_shipping_zone_normalizes[  Nacional  -nacional] PASSED [ 95%]
+tests/test_validators.py::test_validate_shipping_zone_normalizes[Local-local] PASSED [ 97%]
+tests/test_validators.py::test_validate_shipping_zone_raises_when_unknown PASSED [100%]
+
+=================================== FAILURES ===================================
+________________ test_calculate_shipping_cost_at_free_threshold ________________
+
+    def test_calculate_shipping_cost_at_free_threshold():
+        """Frontera: exactamente 700000 el envio debe ser gratis."""
+>       assert calculate_shipping_cost("nacional", 700000) == 0
+E       AssertionError: assert 25000 == 0
+E        +  where 25000 = calculate_shipping_cost('nacional', 700000)
+
+tests/test_pricing.py:81: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_pricing.py::test_calculate_shipping_cost_at_free_threshold
+========================= 1 failed, 42 passed in 0.05s =========================
